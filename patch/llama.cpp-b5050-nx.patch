@@ -1,0 +1,82 @@
+diff --git a/ggml/src/ggml-cuda/common.cuh b/ggml/src/ggml-cuda/common.cuh
+index 8284a0017..dd459b6f8 100644
+--- a/ggml/src/ggml-cuda/common.cuh
++++ b/ggml/src/ggml-cuda/common.cuh
+@@ -452,7 +452,7 @@ static __device__ __forceinline__ int ggml_cuda_dp4a(const int a, const int b, i
+ }
+ 
+ // TODO: move to ggml-common.h
+-static constexpr __device__ int8_t kvalues_iq4nl[16] = {-127, -104, -83, -65, -49, -35, -22, -10, 1, 13, 25, 38, 53, 69, 89, 113};
++//static constexpr __device__ int8_t kvalues_iq4nl[16] = {-127, -104, -83, -65, -49, -35, -22, -10, 1, 13, 25, 38, 53, 69, 89, 113};
+ 
+ typedef void (*dequantize_kernel_t)(const void * vx, const int64_t ib, const int iqs, dfloat2 & v);
+ 
+diff --git a/ggml/src/ggml-cuda/convert.cu b/ggml/src/ggml-cuda/convert.cu
+index 2997e2b4d..57421cdcc 100644
+--- a/ggml/src/ggml-cuda/convert.cu
++++ b/ggml/src/ggml-cuda/convert.cu
+@@ -419,9 +419,11 @@ static __global__ void dequantize_block_iq1_m(const void * __restrict__ vx, dst_
+     }
+ }
+ 
++__device__ float kvalues_iq4nl[32];
++
+ template<typename dst_t>
+ static __global__ void dequantize_block_iq4_nl(const void * __restrict__ vx, dst_t * __restrict__ yy) {
+-
++    
+     const int64_t i   = blockIdx.x;
+     const block_iq4_nl * x = (const block_iq4_nl *) vx + i*(QK_K/QK4_NL);
+ 
+diff --git a/ggml/src/ggml-cuda/cpy.cu b/ggml/src/ggml-cuda/cpy.cu
+index 1f3151e75..6c6a63987 100644
+--- a/ggml/src/ggml-cuda/cpy.cu
++++ b/ggml/src/ggml-cuda/cpy.cu
+@@ -253,6 +253,8 @@ static __device__ __forceinline__ int best_index_int8(int n, const int8_t * val,
+     return x - val[mu-1] < val[mu] - x ? mu-1 : mu;
+ }
+ 
++__device__ int8_t kvalues_iq4nl[32];
++
+ static __device__ void cpy_blck_f32_iq4_nl(const char * cxi, char * cdsti) {
+     const float * xi = (const float *) cxi;
+     block_iq4_nl * dsti = (block_iq4_nl *) cdsti;
+diff --git a/ggml/src/ggml-cuda/fattn-common.cuh b/ggml/src/ggml-cuda/fattn-common.cuh
+index 3fe22092f..e7184ddf7 100644
+--- a/ggml/src/ggml-cuda/fattn-common.cuh
++++ b/ggml/src/ggml-cuda/fattn-common.cuh
+@@ -620,7 +620,7 @@ static __global__ void flash_attn_combine_results(
+     dst       +=                 D * gridDim.z*blockIdx.x;
+ 
+     const int tid = threadIdx.x;
+-    __builtin_assume(tid < D);
++   // __builtin_assume(tid < D);
+ 
+     extern __shared__ float2 meta[];
+     if (tid < 2*parallel_blocks) {
+diff --git a/ggml/src/ggml-cuda/fattn-vec-f32.cuh b/ggml/src/ggml-cuda/fattn-vec-f32.cuh
+index 704874855..64b2f5e28 100644
+--- a/ggml/src/ggml-cuda/fattn-vec-f32.cuh
++++ b/ggml/src/ggml-cuda/fattn-vec-f32.cuh
+@@ -68,7 +68,7 @@ static __global__ void flash_attn_vec_ext_f32(
+     static_assert(D % (2*WARP_SIZE) == 0, "D not divisible by 2*WARP_SIZE == 64.");
+     constexpr int nwarps = D / WARP_SIZE;
+     const int tid = WARP_SIZE*threadIdx.y + threadIdx.x;
+-    __builtin_assume(tid < D);
++    // __builtin_assume(tid < D);
+ 
+     __shared__ float KQ[ncols*D];
+ #pragma unroll
+diff --git a/ggml/src/ggml-cuda/vecdotq.cuh b/ggml/src/ggml-cuda/vecdotq.cuh
+index 40091a0ef..792e5583f 100644
+--- a/ggml/src/ggml-cuda/vecdotq.cuh
++++ b/ggml/src/ggml-cuda/vecdotq.cuh
+@@ -1065,7 +1065,7 @@ static __device__ __forceinline__ float vec_dot_iq1_m_q8_1(
+     const int sc1 = 2*((tmp >> 3) & 0x07) + 1;
+     return d * ((sumi[0] + sumf[0]) * sc0 + (sumi[1] + sumf[1]) * sc1);
+ }
+-
++__device__ float kvalues_iq4nl[32];
+ static __device__ __forceinline__ int2 get_int_from_table_16(const int & q4) {
+     const int      q0_32  = (q4 >> 0) & 0x0F0F0F0F;
+     const int8_t * q0_8   = (const int8_t *) &q0_32;
