@@ -54,7 +54,7 @@ screen -r <screen_name>
 ```
 
 ## btop, htop, top, ...
-They are good tools to monitor the performance.
+These are good tools to monitor the performance.
 
 * Install `btop`
 ```bash

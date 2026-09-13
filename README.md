@@ -4,7 +4,7 @@ llama.cpp with CUDA support on a Nintendo Switch running Ubuntu.
 
 <div align="center">
 
-[Build from source](https://github.com/androrho/llama.cpp-nx-guide/doc/README.md) / 
+[Build from source](doc/README.md) / 
 [Releases](https://github.com/androrho/llama.cpp-nx-guide) /
 [llama.cpp-nx](https://github.com/androrho/llama.cpp-nx) /
 [llama.cpp](https://github.com/ggml-org/llama.cpp) / 
