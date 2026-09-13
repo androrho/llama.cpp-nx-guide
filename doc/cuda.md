@@ -6,12 +6,11 @@ This guide explains how to install and patch CUDA 10.2 to compile llama.cpp-nx.
 
 * BSP (Board Support Package) updated to `32.7.4` ([BSP update guide](bsp.md)).
 
-## 1. Add nvidia repos to  CUDA 10.2 (Ubuntu 24 & 22 only)
-
-These steps are only for Ubuntu 24 and Ubuntu 22, so if you have Ubuntu 18 installed, skip these steps and go to the patch CUDA 10.2 section.
-
 ## 1. Add nvidia repo to apt (Ubuntu 24 & 22 only)
- 
+* Install required dependences
+```bash
+sudo apt install curl -y
+```
 * Import gpg key for the nvidia repos
 ```bash
 sudo mkdir -p /etc/apt/trusted.gpg.d
@@ -32,7 +31,7 @@ deb https://repo.download.nvidia.com/jetson/t210 r32.7 main" | sudo tee /etc/apt
 sudo apt update && sudo apt install cuda-toolkit-10-2 -y
 ```
 > Note: Install only the cuda-toolkit-10-2 package from the nvidia repos.
-## 2. Patch CUDA 10.2
+## 3. Patch CUDA 10.2
 
 First of all, clone this repo to obtain the `cuda_bf16.h`, `cuda_bf16.hpp` and `reduce.h` files.
 
@@ -46,8 +45,8 @@ Then we have to paste the following files to the `/usr/local/cuda-10-2/include` 
 
 `cuda_bf16.h` and `cuda_bf16.hpp`
 ```bash
-sudo cp llama.cpp-nx-guide/patches/cuda_bf16.h /usr/local/cuda-10-2/include/cuda_bf16.h
-sudo cp llama.cpp-nx-guide/patches/cuda_bf16.hpp /usr/local/cuda-10-2/include/cuda_bf16.hpp
+sudo cp llama.cpp-nx-guide/patch/cuda_bf16.h /usr/local/cuda-10-2/include/cuda_bf16.h
+sudo cp llama.cpp-nx-guide/patch/cuda_bf16.hpp /usr/local/cuda-10-2/include/cuda_bf16.hpp
 ```
 `reduce.h`
 
@@ -55,7 +54,7 @@ sudo cp llama.cpp-nx-guide/patches/cuda_bf16.hpp /usr/local/cuda-10-2/include/cu
 # Create the cooperative_groups folder
 sudo mkdir /usr/local/cuda-10-2/include/cooperative_groups
 # Copy the reduce.h file
-sudo cp llama.cpp-nx-guide/patches/reduce.h /usr/local/cuda-10-2/include/cooperative_groups/reduce.h
+sudo cp llama.cpp-nx-guide/patch/reduce.h /usr/local/cuda-10-2/include/cooperative_groups/reduce.h
 ```
 
 >Note: remember to copy the files as sudo, as only root has the permission to write under the `cuda-10-2` folder
