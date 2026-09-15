@@ -46,7 +46,7 @@ git checkout b10405
 * Apply the patches to the `llama.cpp` build, patches for b10405 are only for build b10405, same with build b5050.
 
 ```bash
-git apply ../llama.cpp-nx-guide/patches/llama.cpp-b10405-nx.patch
+git apply ../llama.cpp-nx-guide/patch/llama.cpp-b10405-nx.patch
 ```
 > Note: There's no need to apply any patches  to build b3233, as it is the latest one that doesn't require any patches.
 ### 1 B. From my llama.cpp fork
@@ -57,7 +57,12 @@ git apply ../llama.cpp-nx-guide/patches/llama.cpp-b10405-nx.patch
 git clone https://github.com/androrho/llama.cpp-nx.git
 ```
 
-#### 2. Switch to the branch with the patches
+And cd into it
+```bash
+cd llama.cpp-nx
+```
+
+#### 2. Switch to the branch/tag with the patches
 
 * b10405 `git switch b10405-nx`
 * b5050 `git switch b5050-nx`
