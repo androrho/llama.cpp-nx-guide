@@ -53,7 +53,7 @@ sudo cp llama.cpp-nx-guide/patch/cuda_bf16.hpp /usr/local/cuda-10.2/include/cuda
 
 ```bash
 # Create the cooperative_groups folder
-sudo mkdir /usr/local/cuda-10-2/include/cooperative_groups
+sudo mkdir /usr/local/cuda-10.2/include/cooperative_groups
 # Copy the reduce.h file
 sudo cp llama.cpp-nx-guide/patch/reduce.h /usr/local/cuda-10.2/include/cooperative_groups/reduce.h
 ```
