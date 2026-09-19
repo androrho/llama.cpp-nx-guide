@@ -5,9 +5,9 @@ This guide explains how to install and patch CUDA 10.2 to compile llama.cpp-nx.
 ## Prerequisites
 
 * BSP (Board Support Package) updated to `32.7.4` ([BSP update guide](bsp.md)).
-* `curl` and `git` installed.
+* `curl`, `git` and `libssl-dev` installed.
 ```bash
-sudo apt install curl git
+sudo apt install curl git libssl-dev
 ```
 
 ## 1. Add nvidia repo to apt (Ubuntu 24 & 22 only)
