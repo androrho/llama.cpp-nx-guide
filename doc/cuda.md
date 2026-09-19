@@ -31,6 +31,21 @@ deb https://repo.download.nvidia.com/jetson/t210 r32.7 main" | sudo tee /etc/apt
 ```bash
 sudo apt update && sudo apt install cuda-toolkit-10-2 -y
 ```
+
+* Then add CUDA 10.2 to path
+```bash
+cat << 'EOF' >> ~/.bashrc
+
+export PATH=/usr/local/cuda-13.4/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda-13.4/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+EOF
+```
+
+* Apply the changes
+```bash
+source ~/.bashrc
+```
+
 > Note: Install only the cuda-toolkit-10-2 package from the nvidia repos.
 ## 3. Patch CUDA 10.2
 
